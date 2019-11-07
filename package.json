@@ -1,0 +1,58 @@
+{
+  "name": "react-apps-template",
+  "version": "1.0.0",
+  "description": "这是react多页面打包，分模块打包的模板项目",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --progress --config build/webpack.dev.config.js",
+    "build-test": "cross-env NODE_ENV=test node build/build.js",
+    "build": "cross-env NODE_ENV=production node build/build.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/runtime": "^7.5.5",
+    "@babel/runtime-corejs2": "^7.5.5",
+    "autoprefixer": "^9.6.1",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-import": "^1.12.0",
+    "babel-plugin-react-html-attrs": "^2.1.0",
+    "chalk": "^2.4.2",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.0.4",
+    "cross-env": "^5.2.0",
+    "css-loader": "^3.2.0",
+    "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^4.0.0-beta.3",
+    "less": "^3.9.0",
+    "less-loader": "^5.0.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "ora": "^4.0.2",
+    "postcss-loader": "^3.0.0",
+    "style-loader": "^1.0.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "url-loader": "^2.1.0",
+    "webpack": "^4.39.1",
+    "webpack-bundle-analyzer": "^3.4.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.8.0",
+    "webpack-merge": "^4.2.1"
+  },
+  "dependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-router-dom": "^5.0.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}

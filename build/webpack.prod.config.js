@@ -1,0 +1,104 @@
+const Webpack = require("webpack")
+const webpackMerge = require("webpack-merge");
+const baseWebpackConfig = require("./webpack.base.config")
+const utils = require("./utils")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
+const OptimizeCSSAssetsPlugin  = require("optimize-css-assets-webpack-plugin")
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
+
+const NODE_ENV = process.env.NODE_ENV;
+
+module.exports = webpackMerge(baseWebpackConfig,{
+    // 入口
+    entry: {
+        app: "./src/index",
+    },
+    // 出口
+    output: {
+        path : utils.resolve("../dist"),
+        filename: utils.assetsPath("js/[name].[hash].js") ,
+        chunkFilename: utils.assetsPath("js/[name].[chunkhash].js"),
+        publicPath: "/" // 打包后的资源的访问路径前缀
+    },
+    // 指定构建环境  
+    mode:"production",
+    devtool: false,
+    module:{
+        rules:utils.cssLoaders({extract:true})
+    },
+    // 插件
+    plugins:[
+        // css压缩
+        new MiniCssExtractPlugin({
+            filename: utils.assetsPath('css/[name].[hash].css'),
+            chunkFilename: utils.assetsPath('css/[id].[chunkhash].css'),
+        }),
+        new HtmlWebpackPlugin({
+            filename: utils.resolve('./../dist/index.html'), // html模板的生成路径
+            template: 'index.html',//html模板
+            inject: true, // true：默认值，script标签位于html文件的 body 底部
+            //  html 文件进行压缩
+            minify: {
+                removeComments: true,               //去注释
+                collapseWhitespace: true,           //压缩空格
+                removeAttributeQuotes: true         //去除属性引用
+            }
+        }),
+        new CleanWebpackPlugin(),
+        // new BundleAnalyzerPlugin(),
+    ],
+    optimization: {
+        // 压缩css
+        minimizer: [
+            // 自定义js优化配置，将会覆盖默认配置
+            new UglifyJsPlugin({
+                parallel: true,  //使用多进程并行运行来提高构建速度
+                sourceMap: false,
+                uglifyOptions: {
+                    warnings: false,
+                    compress: {
+                        unused: true,
+                        drop_debugger: true,
+                        // drop_console: true, 
+                    },
+                    output: {
+                        comments: false // 去掉注释
+                    }
+                }
+            }),
+            new OptimizeCSSAssetsPlugin({
+                cssProcessorOptions: { 
+                    discardComments: { removeAll: true } // 移除注释
+                } 
+            })
+        ],
+        splitChunks: {
+            chunks: "all",
+            minSize: 30000,
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 5,
+            automaticNameDelimiter: '~',
+            name:true,
+            // 默认的配置
+            cacheGroups: {
+
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10
+                },
+                default: {
+                    minChunks: 2, // 引用超过两次的模块 -> default
+                    priority: -20,
+                    reuseExistingChunk: true
+                },
+            },
+        },
+        runtimeChunk:{
+            name:'manifest' // webpack的运行文件
+        }
+    },
+})
