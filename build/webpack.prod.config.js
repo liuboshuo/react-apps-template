@@ -1,4 +1,3 @@
-const Webpack = require("webpack")
 const webpackMerge = require("webpack-merge");
 const baseWebpackConfig = require("./webpack.base.config")
 const utils = require("./utils")
@@ -8,27 +7,28 @@ const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 const OptimizeCSSAssetsPlugin  = require("optimize-css-assets-webpack-plugin")
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
+const { getModuleList , getBuildEntry,getHtmlWebpackPluginList} = require("./module-entry")
 
-const NODE_ENV = process.env.NODE_ENV;
 
 module.exports = webpackMerge(baseWebpackConfig,{
+    // 指定构建环境  
+    mode:"production",
     // 入口
-    entry: {
-        app: "./src/index",
-    },
+    entry: getBuildEntry(),
     // 出口
     output: {
         path : utils.resolve("../dist"),
         filename: utils.assetsPath("js/[name].[hash].js") ,
-        chunkFilename: utils.assetsPath("js/[name].[chunkhash].js"),
+        chunkFilename: utils.assetsPath("js/[name].[chunkhash].js"), // utils.assetsPath("js/[id].[chunkhash].js")
         publicPath: "/" // 打包后的资源的访问路径前缀
     },
-    // 指定构建环境  
-    mode:"production",
-    devtool: false,
+    
+    devtool: 'cheap-module-source-map',
+    
     module:{
-        rules:utils.cssLoaders({extract:true})
+        rules:utils.cssLoaders({extract:true,sourceMap:true})
     },
+
     // 插件
     plugins:[
         // css压缩
@@ -40,7 +40,7 @@ module.exports = webpackMerge(baseWebpackConfig,{
             filename: utils.resolve('./../dist/index.html'), // html模板的生成路径
             template: 'index.html',//html模板
             inject: true, // true：默认值，script标签位于html文件的 body 底部
-            //  html 文件进行压缩
+            chunks: ['app'],  // 注入app名称bundel
             minify: {
                 removeComments: true,               //去注释
                 collapseWhitespace: true,           //压缩空格
@@ -48,21 +48,22 @@ module.exports = webpackMerge(baseWebpackConfig,{
             }
         }),
         new CleanWebpackPlugin(),
-        // new BundleAnalyzerPlugin(),
-    ],
+        new BundleAnalyzerPlugin(),
+    ].concat(getHtmlWebpackPluginList()),
+    
     optimization: {
         // 压缩css
         minimizer: [
             // 自定义js优化配置，将会覆盖默认配置
             new UglifyJsPlugin({
                 parallel: true,  //使用多进程并行运行来提高构建速度
-                sourceMap: false,
+                sourceMap: true,
                 uglifyOptions: {
                     warnings: false,
                     compress: {
                         unused: true,
                         drop_debugger: true,
-                        // drop_console: true, 
+                        drop_console: true, 
                     },
                     output: {
                         comments: false // 去掉注释
