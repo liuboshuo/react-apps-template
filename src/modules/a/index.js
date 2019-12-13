@@ -8,25 +8,24 @@ import TestPage from "./pages/test"
 
 class App extends React.Component {
     render(){
-        console.log(process.env.APP_ENV)
         return (
             <div class="test">
-                hello react-apps-template
+                hello react-apps-template a
                 <BrowserRouter>
                     <ul>
                         <li>
-                            <Link to="/">HomePage</Link>
+                            <Link to="/a">HomePage</Link>
                         </li>
                         <li>
-                            <Link to="/test">TestPage</Link>
+                            <Link to="/a/test">TestPage</Link>
                         </li>
                     </ul>
                     <Switch>
                         {/* 登陆 */}
-                        <Route path="/test" component={TestPage} />
+                        <Route path="/a/test" component={TestPage} />
 
                         {/* 路由 */}
-                        <Route path="/" component={HomePage} />
+                        <Route path="/a" component={HomePage} />
                         
                     </Switch>
                 </BrowserRouter>
