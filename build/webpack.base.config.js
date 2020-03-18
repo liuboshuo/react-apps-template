@@ -6,10 +6,6 @@ const CopyWebpackPlugin = require("copy-webpack-plugin")
 const NODE_ENV_VALUE = process.env.NODE_ENV;
 
 module.exports = {
-    // 入口
-    entry: {
-        app: "./src/index" 
-    },
     // 出口
     output: {
         path : utils.resolve("../dist"),

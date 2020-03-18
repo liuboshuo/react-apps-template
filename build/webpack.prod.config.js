@@ -7,7 +7,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 const OptimizeCSSAssetsPlugin  = require("optimize-css-assets-webpack-plugin")
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
-const { getModuleList , getBuildEntry,getHtmlWebpackPluginList} = require("./module-entry")
+const { getPrdOutPutPath , getBuildEntry, getHtmlWebpackPluginList, getPublicPath} = require("./module-entry")
 
 
 module.exports = webpackMerge(baseWebpackConfig,{
@@ -17,10 +17,10 @@ module.exports = webpackMerge(baseWebpackConfig,{
     entry: getBuildEntry(),
     // 出口
     output: {
-        path : utils.resolve("../dist"),
+        path : getPrdOutPutPath(),
         filename: utils.assetsPath("js/[name].[hash].js") ,
         chunkFilename: utils.assetsPath("js/[name].[chunkhash].js"), // utils.assetsPath("js/[id].[chunkhash].js")
-        publicPath: "/" // 打包后的资源的访问路径前缀
+        publicPath: getPublicPath() // 打包后的资源的访问路径前缀
     },
     
     devtool: 'cheap-module-source-map',
@@ -36,19 +36,8 @@ module.exports = webpackMerge(baseWebpackConfig,{
             filename: utils.assetsPath('css/[name].[hash].css'),
             chunkFilename: utils.assetsPath('css/[id].[chunkhash].css'),
         }),
-        new HtmlWebpackPlugin({
-            filename: utils.resolve('./../dist/index.html'), // html模板的生成路径
-            template: 'index.html',//html模板
-            inject: true, // true：默认值，script标签位于html文件的 body 底部
-            chunks: ['app'],  // 注入app名称bundel
-            minify: {
-                removeComments: true,               //去注释
-                collapseWhitespace: true,           //压缩空格
-                removeAttributeQuotes: true         //去除属性引用
-            }
-        }),
         new CleanWebpackPlugin(),
-        new BundleAnalyzerPlugin(),
+        // new BundleAnalyzerPlugin(),
     ].concat(getHtmlWebpackPluginList()),
     
     optimization: {

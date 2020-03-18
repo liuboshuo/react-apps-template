@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --progress --config build/webpack.dev.config.js",
-    "build-test": "cross-env NODE_ENV=test node build/build.js",
-    "build": "cross-env NODE_ENV=production node build/build.js"
+    "build-multipage:test": "cross-env NODE_ENV=test node build/build.js",
+    "build-multipage": "cross-env NODE_ENV=production node build/build.js",
+    "build-apps:test": "cross-env NODE_ENV=test node build/build-apps.js",
+    "build-apps": "cross-env NODE_ENV=production node build/build-apps.js"
   },
   "author": "",
   "license": "ISC",
